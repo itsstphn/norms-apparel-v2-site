@@ -1,24 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+
+import Box from "@mui/material/Box";
+import Product from "./pages/Product";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Checkout from "./pages/Checkout";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { Navigate } from "react-router-dom";
+import { useAuthContext } from "./hooks/useAuthContext";
+import AddListing from "./pages/AddListing";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "./store/productsSlice";
+import { fetchCart } from "./store/cartSlice";
 
 function App() {
+  const { user, authIsReady, isAdmin } = useAuthContext();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    user && dispatch(fetchCart(user));
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box sx={{ overflow: "hidden", minHeight: "100vh", display: "flex" }}>
+      {authIsReady ? (
+        <BrowserRouter>
+          <Navbar></Navbar>
+          <Box paddingTop="65px" minHeight="100%" flexGrow={1}>
+            <Routes>
+              <Route path="/" element={<Home></Home>}></Route>
+              <Route path="/product/:id" element={<Product></Product>}></Route>
+              <Route
+                path="/add-listing"
+                element={<AddListing></AddListing>}
+              ></Route>
+              <Route path="/checkout" element={<Checkout></Checkout>}></Route>
+              <Route
+                path="/login"
+                element={!user ? <Login></Login> : <Navigate to="/"></Navigate>}
+              ></Route>
+              <Route path="/signup" element={<Signup></Signup>}></Route>
+            </Routes>
+          </Box>
+        </BrowserRouter>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </Box>
   );
 }
 
