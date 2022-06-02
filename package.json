@@ -2,7 +2,6 @@
   "name": "norms-apparel-v2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://itsstphn.github.io/norms-apparel-v2",
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
@@ -13,7 +12,6 @@
     "@testing-library/react": "^13.0.1",
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^9.8.1",
-    "gh-pages": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.1",
@@ -25,9 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
