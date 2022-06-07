@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { useSignup } from "../hooks/useSignup";
 import { useAuthContext } from "./../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const CustomTextField = styled(TextField)({
   margin: ".5rem 0",
@@ -26,7 +27,8 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     signup(displayName, email, password, userType);
     console.log(displayName, email, password, userType);
   };

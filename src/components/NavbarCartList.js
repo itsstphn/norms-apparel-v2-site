@@ -14,22 +14,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { arrayRemove, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useDeleteCart } from "./../hooks/useDeleteCart";
 
 const NavbarCartList = ({ cartItems, handleCartClose }) => {
   const { user } = useAuthContext();
+  const { deleteCart } = useDeleteCart();
 
   const handleDeleteCartItem = async (item) => {
-    const docRef = doc(db, "users", user.uid);
-
-    try {
-      await updateDoc(docRef, {
-        cart: arrayRemove(item),
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-
-    console.log(item);
+    deleteCart(item);
   };
 
   return (

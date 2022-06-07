@@ -24,6 +24,22 @@ const cart = createSlice({
       state.totalQuantity = 0;
       state.totalPrice = 0;
     },
+    addItem(state, action) {
+      const item = action.payload;
+      state.items = [...state.items, item];
+      state.totalQuantity = state.items.length;
+      let totalPrice = 0;
+      state.items.forEach((item) => (totalPrice += item.totalPrice));
+      state.totalPrice = totalPrice;
+    },
+    deleteItem(state, action) {
+      const itemID = action.payload;
+      state.items.filter((stateItem) => stateItem.id !== itemID);
+      state.totalQuantity = state.items.length;
+      let totalPrice = 0;
+      state.items.forEach((item) => (totalPrice += item.totalPrice));
+      state.totalPrice = totalPrice;
+    },
   },
 });
 
@@ -32,21 +48,29 @@ export const fetchCart = (user) => async (dispatch) => {
 
   console.log(uid);
   // console.log("userid: ", user.uid);
-  const unsub = onSnapshot(doc(db, "users", uid), (currentUser) => {
-    // console.log("currentUserr", currentUser.data().cart);
-    const userCart = currentUser.data().cart;
-    console.log("userCart: ", userCart);
+  const docRef = doc(db, "cart", user.uid);
+  const colRef = collection(docRef, "userCart");
+
+  const unsub = onSnapshot(colRef, (userCart) => {
+    const cartItems = [];
+    userCart &&
+      userCart.forEach((item) => {
+        cartItems.push(item.data());
+      });
+    // console.log("userCart", userCart.data());
+    // const userCart = currentUser.data().cart.cartItems;
+    console.log("userCart: ", cartItems);
     // const cartItems = [];
     // console.log(cartItems);
     // userCart &&
     //   userCart.forEach((item) => {
     //     cartItems.push(item);
     //   });
-    userCart && dispatch(loadItems(userCart));
+    userCart && dispatch(loadItems(cartItems));
   });
 
   return () => unsub();
 };
 
-export const { loadItems, emptyCart } = cart.actions;
+export const { loadItems, emptyCart, addItem, deleteItem } = cart.actions;
 export default cart;

@@ -60,8 +60,12 @@ const Login = () => {
         }}
       >
         {error && <Typography sx={{ color: "red" }}>{error}</Typography>}
-        <Button onClick={handleClickLogin} variant="contained">
-          Login
+        <Button
+          onClick={handleClickLogin}
+          disabled={isPending}
+          variant="contained"
+        >
+          {isPending ? "Logging in..." : "Login"}
         </Button>
         <Notifier
           openMessage={openNotifierMessage}
@@ -69,7 +73,7 @@ const Login = () => {
           message={error}
           alertType="error"
         ></Notifier>
-        <Button variant="outlined">
+        <Button disabled={isPending} variant="outlined">
           <Link to="/signup">signup instead</Link>
         </Button>
       </Box>

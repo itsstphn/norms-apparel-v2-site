@@ -105,8 +105,6 @@ const Navbar = () => {
     dispatch(emptyCart());
   };
 
-  const navigate = useNavigate();
-
   // const { user } = useAuthContext();
   // user && console.log(user);
 
@@ -219,7 +217,8 @@ const Navbar = () => {
                             marginRight: "1rem",
                           }}
                         >
-                          {user.displayName.toUpperCase().charAt(0)}
+                          {user.displayName &&
+                            user.displayName.toUpperCase().charAt(0)}
                         </Avatar>
                         <Typography color="#222">{user.displayName}</Typography>
                       </IconButton>
@@ -363,7 +362,8 @@ const Navbar = () => {
                       height: "30px",
                     }}
                   >
-                    {user.displayName.toUpperCase().charAt(0)}
+                    {user.displayName &&
+                      user.displayName.toUpperCase().charAt(0)}
                   </Avatar>
                 </IconButton>
               </Box>

@@ -34,6 +34,7 @@ export const useLogin = () => {
       console.log(isCancelled);
 
       setError(error.code);
+      setIsPending(false);
     }
   };
 
