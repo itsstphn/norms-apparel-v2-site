@@ -88,8 +88,13 @@ const Signup = () => {
           gap: "1rem",
         }}
       >
-        <Button type="submit" onClick={handleSubmit} variant="contained">
-          Signup
+        <Button
+          type="submit"
+          disabled={isPending}
+          onClick={handleSubmit}
+          variant="contained"
+        >
+          {isPending ? "Signing up.." : "Signup"}
         </Button>
       </Box>
     </CardForm>
