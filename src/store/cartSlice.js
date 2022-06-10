@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { useAuthContext } from "./../hooks/useAuthContext";
 
 const cart = createSlice({
   name: "cart",
   initialState: {
     items: [],
     totalQuantity: 0,
-    totalPrice: 0,
+    cartTotalPrice: 0,
   },
   reducers: {
     loadItems(state, action) {
@@ -17,12 +16,12 @@ const cart = createSlice({
       state.totalQuantity = state.items.length;
       let totalPrice = 0;
       state.items.forEach((item) => (totalPrice += item.totalPrice));
-      state.totalPrice = totalPrice;
+      state.cartTotalPrice = totalPrice;
     },
     emptyCart(state, action) {
       state.items = [];
       state.totalQuantity = 0;
-      state.totalPrice = 0;
+      state.cartTotalPrice = 0;
     },
     addItem(state, action) {
       const item = action.payload;
@@ -30,15 +29,28 @@ const cart = createSlice({
       state.totalQuantity = state.items.length;
       let totalPrice = 0;
       state.items.forEach((item) => (totalPrice += item.totalPrice));
-      state.totalPrice = totalPrice;
+      state.cartTotalPrice = totalPrice;
     },
     deleteItem(state, action) {
-      const itemID = action.payload;
-      state.items.filter((stateItem) => stateItem.id !== itemID);
+      state.items = state.items.filter(
+        (stateItem) => stateItem.id !== action.payload
+      );
       state.totalQuantity = state.items.length;
       let totalPrice = 0;
       state.items.forEach((item) => (totalPrice += item.totalPrice));
-      state.totalPrice = totalPrice;
+      state.cartTotalPrice = totalPrice;
+    },
+    addQuantity: (state, action) => {
+      state.items.map((item) => {
+        if (item.id === action.payload) {
+          item.quantity = item.quantity + 1;
+          item.totalPrice = item.totalPrice + item.productPrice;
+        }
+      });
+      state.totalQuantity = state.items.length;
+      let totalPrice = 0;
+      state.items.forEach((item) => (totalPrice += item.totalPrice));
+      state.cartTotalPrice = totalPrice;
     },
   },
 });
@@ -72,5 +84,6 @@ export const fetchCart = (user) => async (dispatch) => {
   return () => unsub();
 };
 
-export const { loadItems, emptyCart, addItem, deleteItem } = cart.actions;
+export const { loadItems, emptyCart, addItem, deleteItem, addQuantity } =
+  cart.actions;
 export default cart;

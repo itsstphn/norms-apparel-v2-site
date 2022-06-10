@@ -82,12 +82,16 @@ const Signup = () => {
       <Box
         sx={{
           margin: "1.5rem",
-          // marginTop: "auto",
+          // marginTop: "0",
           display: "flex",
           flexDirection: "column",
-          gap: "1rem",
         }}
       >
+        {error && (
+          <Typography margin={0} color="red" variant="caption">
+            {error}
+          </Typography>
+        )}
         <Button
           type="submit"
           disabled={isPending}

@@ -307,7 +307,7 @@ const Navbar = () => {
                   {cartItems.length !== 0 && (
                     <>
                       <Typography>
-                        Total Php <strong>{cart.totalPrice}</strong>
+                        Total Php <strong>{cart.cartTotalPrice}</strong>
                       </Typography>
                       <Button variant="contained">Checkout</Button>
                     </>

@@ -1,36 +1,34 @@
 import {
+  Avatar,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
-  ListSubheader,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
-import { useAuthContext } from "../hooks/useAuthContext";
+
 import { useDeleteCart } from "./../hooks/useDeleteCart";
 
 const NavbarCartList = ({ cartItems, handleCartClose }) => {
-  const { user } = useAuthContext();
   const { deleteCart } = useDeleteCart();
 
-  const handleDeleteCartItem = async (item) => {
+  const handleDeleteCartItem = (item) => {
     deleteCart(item);
+    console.log("item to delete: ", item);
   };
 
   return (
     <List
       sx={{
         width: "100%",
-        maxWidth: 360,
+        maxWidth: 380,
         bgcolor: "background.paper",
-        padding: ".5rem",
+        // padding: ".5rem",
         paddingBottom: 0,
         maxHeight: "500px",
       }}
@@ -40,7 +38,7 @@ const NavbarCartList = ({ cartItems, handleCartClose }) => {
           <ListItem
             secondaryAction={
               <IconButton
-                edge="end"
+                // edge="end"
                 onClick={() => handleDeleteCartItem(item)}
                 aria-label="delete"
               >
@@ -54,27 +52,29 @@ const NavbarCartList = ({ cartItems, handleCartClose }) => {
               to={`/product/${item.id}`}
               onClick={handleCartClose}
               sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 2fr 1fr",
-                width: "100%",
+                display: "flex",
+
+                // width: "100%",
                 gap: "1rem",
-                alignItems: "center",
+                // alignItems: "center",
+                paddingRight: 0,
               }}
-              alignItems="center"
             >
-              <ListItemAvatar width="50px" display="grid">
-                <img
-                  width="100%"
+              <ListItemAvatar width="50px" height="50px" display="grid">
+                <Avatar
+                  flex="2"
+                  variant="square"
                   src={item.productImgURL}
                   alt={item.productName}
                 />
               </ListItemAvatar>
-              <ListItemText>
+              <ListItemText flex="3">
                 <Typography>{item.productName}</Typography>
               </ListItemText>
-              <ListItemText sx={{ background: "transparent" }}>
+              <ListItemText flex="3" sx={{ background: "transparent" }}>
                 Php{item.productPrice}
               </ListItemText>
+              <ListItemText flex="1">x{item.quantity}</ListItemText>
             </ListItemButton>
           </ListItem>
         ))

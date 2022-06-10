@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { db } from "../firebase/config";
-import { addItem, loadItems } from "../store/cartSlice";
+import { addItem, addQuantity, loadItems } from "../store/cartSlice";
 import { useAuthContext } from "./useAuthContext";
 
 export const useAddCart = () => {
@@ -21,12 +21,10 @@ export const useAddCart = () => {
   const dispatch = useDispatch();
 
   const addCart = async (item) => {
+    const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
+
     if (user) {
       try {
-        const existingItem = cartItems.find(
-          (cartItem) => cartItem.id === item.id
-        );
-
         const docRef = doc(db, "cart", user.uid);
         const colRef = collection(docRef, "userCart");
         const cartItemRef = doc(colRef, item.id);
@@ -62,16 +60,20 @@ export const useAddCart = () => {
         setIsPending(false);
       }
     } else {
-      dispatch(
-        addItem({
-          id: item.id,
-          productName: item.productName,
-          productPrice: +item.productPrice,
-          quantity: 1,
-          totalPrice: +item.productPrice,
-          productImgURL: item.productImgURL,
-        })
-      );
+      if (!existingItem) {
+        dispatch(
+          addItem({
+            id: item.id,
+            productName: item.productName,
+            productPrice: +item.productPrice,
+            quantity: 1,
+            totalPrice: +item.productPrice,
+            productImgURL: item.productImgURL,
+          })
+        );
+      } else {
+        dispatch(addQuantity(item.id));
+      }
     }
   };
 

@@ -10,19 +10,25 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ProductItem from "../components/ProductItem";
 import { useAuthContext } from "../hooks/useAuthContext";
-import Notifier from "./../components/Notifier";
 
 const Home = () => {
   const { isAdmin } = useAuthContext();
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const products = useSelector((state) => state.products.products);
+  const DBproducts = useSelector((state) => state.products.products);
 
-  const cartItems = useSelector((state) => state.cartItems.items);
+  const filteredProducts =
+    selectedCategory !== "all"
+      ? DBproducts.filter((product) =>
+          product.productCategory.includes(selectedCategory)
+        )
+      : DBproducts;
+
+  console.log("filtered: ", filteredProducts);
 
   const [categories, setCategories] = useState([
     "all",
@@ -51,7 +57,7 @@ const Home = () => {
           </Typography>
         ) : (
           <Typography marginY="1rem" variant="h4" component="h1">
-            Find Your Style
+            Welcome to Daoming Shop!
           </Typography>
         )}
 
@@ -94,8 +100,8 @@ const Home = () => {
         </Box>
 
         <Grid container spacing={1}>
-          {products ? (
-            products.map((product) => (
+          {filteredProducts ? (
+            filteredProducts.map((product) => (
               <ProductItem key={product.id} product={product}></ProductItem>
             ))
           ) : (
